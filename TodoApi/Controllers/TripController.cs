@@ -1,17 +1,17 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using TodoApi.Data;
+using TodoApi.Models;
 
 namespace TodoApi.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/v1/trip")]
     [ApiController]
     public class TripController : ControllerBase
     {
-        private readonly DataContext _context;
+        private readonly TnGContext _context;
 
-        public TripController(DataContext context)
+        public TripController(TnGContext context)
         {
             _context = context;
         }
@@ -19,13 +19,13 @@ namespace TodoApi.Controllers
         [HttpGet]
         public async Task<ActionResult<List<Trip>>> Get()
         {
-            return Ok(await _context.trip.ToListAsync());
+            return Ok(await _context.Trips.ToListAsync());
         }
 
         [HttpGet("{Id}")]
         public async Task<ActionResult<List<Trip>>> Get(int Id)
         {
-            var tr = await _context.trip.FindAsync(Id);
+            var tr = await _context.Trips.FindAsync(Id);
             if (tr == null)
                 return BadRequest("not thing.");
             return Ok(tr);
@@ -34,16 +34,16 @@ namespace TodoApi.Controllers
         [HttpPost]
         public async Task<ActionResult<List<Trip>>> Add(Trip tr)
         {
-            _context.trip.Add(tr);
+            _context.Trips.Add(tr);
             await _context.SaveChangesAsync();
 
-            return Ok(await _context.trip.ToListAsync());
+            return Ok(await _context.Trips.ToListAsync());
         }
 
         [HttpPut]
         public async Task<ActionResult<List<Trip>>> Update(Trip request)
         {
-            var tr = await _context.trip.FindAsync(request.Id);
+            var tr = await _context.Trips.FindAsync(request.Id);
             if (tr == null)
                 return BadRequest("not thing.");
 
@@ -57,20 +57,20 @@ namespace TodoApi.Controllers
 
             await _context.SaveChangesAsync();
 
-            return Ok(await _context.trip.ToListAsync());
+            return Ok(await _context.Trips.ToListAsync());
         }
 
         [HttpDelete("{Id}")]
         public async Task<ActionResult<List<Trip>>> Delete(int Id)
         {
-            var tr = await _context.trip.FindAsync(Id);
+            var tr = await _context.Trips.FindAsync(Id);
             if (tr == null)
                 return BadRequest("not thing.");
 
-            _context.trip.Remove(tr);
+            _context.Trips.Remove(tr);
             await _context.SaveChangesAsync();
 
-            return Ok(await _context.trip.ToListAsync());
+            return Ok(await _context.Trips.ToListAsync());
         }
     }
 }

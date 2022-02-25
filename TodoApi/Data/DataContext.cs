@@ -1,13 +1,11 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using TodoApi.Models;
 
 namespace TodoApi.Data
 {
     public class DataContext : DbContext
     {
-        public DataContext(DbContextOptions<DataContext> options) : base(options) { }
-
-
-        public DbSet<Bicycles> Bicycle { get; set; }
+        public DbSet<Bicycle> Bicycle { get; set; }
 
         public DbSet<Station> station { get; set; }
 

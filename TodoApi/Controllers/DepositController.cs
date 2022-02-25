@@ -1,17 +1,17 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using TodoApi.Data;
+using TodoApi.Models;
 
 namespace TodoApi.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/v1/deposit")]
     [ApiController]
-    public class DepositController : ControllerBase
+    public class DepositsController : ControllerBase
     {
-        private readonly DataContext _context;
+        private readonly TnGContext _context;
 
-        public DepositController(DataContext context)
+        public DepositsController(TnGContext context)
         {
             _context = context;
         }
@@ -19,13 +19,13 @@ namespace TodoApi.Controllers
         [HttpGet]
         public async Task<ActionResult<List<Deposit>>> Get()
         {
-            return Ok(await _context.deposit.ToListAsync());
+            return Ok(await _context.Deposits.ToListAsync());
         }
 
         [HttpGet("{Id}")]
-        public async Task<ActionResult<List<Bicycles>>> Get(int Id)
+        public async Task<ActionResult<List<Bicycle>>> Get(int Id)
         {
-            var de = await _context.deposit.FindAsync(Id);
+            var de = await _context.Deposits.FindAsync(Id);
             if (de == null)
                 return BadRequest("not thing.");
             return Ok(de);
@@ -34,16 +34,16 @@ namespace TodoApi.Controllers
         [HttpPost]
         public async Task<ActionResult<List<Deposit>>> Add(Deposit de)
         {
-            _context.deposit.Add(de);
+            _context.Deposits.Add(de);
             await _context.SaveChangesAsync();
 
-            return Ok(await _context.deposit.ToListAsync());
+            return Ok(await _context.Deposits.ToListAsync());
         }
 
         [HttpPut]
         public async Task<ActionResult<List<Deposit>>> Update(Deposit request)
         {
-            var de = await _context.deposit.FindAsync(request.Id);
+            var de = await _context.Deposits.FindAsync(request.Id);
             if (de == null)
                 return BadRequest("not thing.");
 
@@ -56,20 +56,20 @@ namespace TodoApi.Controllers
 
             await _context.SaveChangesAsync();
 
-            return Ok(await _context.deposit.ToListAsync());
+            return Ok(await _context.Deposits.ToListAsync());
         }
 
         [HttpDelete("{Id}")]
         public async Task<ActionResult<List<Deposit>>> Delete(int Id)
         {
-            var de = await _context.deposit.FindAsync(Id);
+            var de = await _context.Deposits.FindAsync(Id);
             if (de == null)
                 return BadRequest("not thing.");
 
-            _context.deposit.Remove(de);
+            _context.Deposits.Remove(de);
             await _context.SaveChangesAsync();
 
-            return Ok(await _context.deposit.ToListAsync());
+            return Ok(await _context.Deposits.ToListAsync());
         }
     }
 }

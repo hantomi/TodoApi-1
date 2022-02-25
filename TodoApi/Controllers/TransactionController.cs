@@ -1,17 +1,17 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using TodoApi.Data;
+using TodoApi.Models;
 
 namespace TodoApi.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/transaction")]
     [ApiController]
     public class TransactionController : ControllerBase
     {
-        private readonly DataContext _context;
+        private readonly TnGContext _context;
 
-        public TransactionController(DataContext context)
+        public TransactionController(TnGContext context)
         {
             _context = context;
         }
@@ -19,13 +19,13 @@ namespace TodoApi.Controllers
         [HttpGet]
         public async Task<ActionResult<List<Transaction>>> Get()
         {
-            return Ok(await _context.transaction.ToListAsync());
+            return Ok(await _context.Transactions.ToListAsync());
         }
 
         [HttpGet("{Id}")]
         public async Task<ActionResult<List<Transaction>>> Get(int Id)
         {
-            var trans = await _context.transaction.FindAsync(Id);
+            var trans = await _context.Transactions.FindAsync(Id);
             if (trans == null)
                 return BadRequest("not thing.");
             return Ok(trans);
@@ -34,16 +34,16 @@ namespace TodoApi.Controllers
         [HttpPost]
         public async Task<ActionResult<List<Transaction>>> Add(Transaction trans)
         {
-            _context.transaction.Add(trans);
+            _context.Transactions.Add(trans);
             await _context.SaveChangesAsync();
 
-            return Ok(await _context.transaction.ToListAsync());
+            return Ok(await _context.Transactions.ToListAsync());
         }
 
         [HttpPut]
         public async Task<ActionResult<List<Transaction>>> Update(Transaction request)
         {
-            var trans = await _context.transaction.FindAsync(request.Id);
+            var trans = await _context.Transactions.FindAsync(request.Id);
             if (trans == null)
                 return BadRequest("not thing.");
 
@@ -56,20 +56,20 @@ namespace TodoApi.Controllers
 
             await _context.SaveChangesAsync();
 
-            return Ok(await _context.transaction.ToListAsync());
+            return Ok(await _context.Transactions.ToListAsync());
         }
 
         [HttpDelete("{Id}")]
         public async Task<ActionResult<List<Transaction>>> Delete(int Id)
         {
-            var trans = await _context.transaction.FindAsync(Id);
+            var trans = await _context.Transactions.FindAsync(Id);
             if (trans == null)
                 return BadRequest("not thing.");
 
-            _context.transaction.Remove(trans);
+            _context.Transactions.Remove(trans);
             await _context.SaveChangesAsync();
 
-            return Ok(await _context.transaction.ToListAsync());
+            return Ok(await _context.Transactions.ToListAsync());
         }
     }
 }

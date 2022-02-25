@@ -1,17 +1,17 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using TodoApi.Data;
+using TodoApi.Models;
 
 namespace TodoApi.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/v1/station")]
     [ApiController]
     public class StationController : ControllerBase
     {
-        private readonly DataContext _context;
+        private readonly TnGContext _context;
 
-        public StationController(DataContext context)
+        public StationController(TnGContext context)
         {
             _context = context;
         }
@@ -19,13 +19,13 @@ namespace TodoApi.Controllers
         [HttpGet]
         public async Task<ActionResult<List<Station>>> Get()
         {
-            return Ok(await _context.station.ToListAsync());
+            return Ok(await _context.Stations.ToListAsync());
         }
 
         [HttpGet("{Id}")]
         public async Task<ActionResult<List<Station>>> Get(int Id)
         {
-            var sta = await _context.station.FindAsync(Id);
+            var sta = await _context.Stations.FindAsync(Id);
             if (sta == null)
                 return BadRequest("not thing.");
             return Ok(sta);
@@ -34,16 +34,16 @@ namespace TodoApi.Controllers
         [HttpPost]
         public async Task<ActionResult<List<Station>>> Add(Station sta)
         {
-            _context.station.Add(sta);
+            _context.Stations.Add(sta);
             await _context.SaveChangesAsync();
 
-            return Ok(await _context.station.ToListAsync());
+            return Ok(await _context.Stations.ToListAsync());
         }
 
         [HttpPut]
         public async Task<ActionResult<List<Station>>> Update(Station request)
         {
-            var sta = await _context.station.FindAsync(request.Id);
+            var sta = await _context.Stations.FindAsync(request.Id);
             if (sta == null)
                 return BadRequest("not thing.");
 
@@ -54,20 +54,20 @@ namespace TodoApi.Controllers
 
             await _context.SaveChangesAsync();
 
-            return Ok(await _context.station.ToListAsync());
+            return Ok(await _context.Stations.ToListAsync());
         }
 
         [HttpDelete("{Id}")]
         public async Task<ActionResult<List<Station>>> Delete(int Id)
         {
-            var sta = await _context.station.FindAsync(Id);
+            var sta = await _context.Stations.FindAsync(Id);
             if (sta == null)
                 return BadRequest("not thing.");
 
-            _context.station.Remove(sta);
+            _context.Stations.Remove(sta);
             await _context.SaveChangesAsync();
 
-            return Ok(await _context.station.ToListAsync());
+            return Ok(await _context.Stations.ToListAsync());
         }
     }
 }

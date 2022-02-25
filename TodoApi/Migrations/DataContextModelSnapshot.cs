@@ -3,13 +3,12 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using TodoApi.Data;
-
+using TodoApi.Models;
 #nullable disable
 
 namespace TodoApi.Migrations
 {
-    [DbContext(typeof(DataContext))]
+    [DbContext(typeof(TnGContext))]
     partial class DataContextModelSnapshot : ModelSnapshot
     {
         protected override void BuildModel(ModelBuilder modelBuilder)

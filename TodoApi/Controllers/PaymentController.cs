@@ -1,17 +1,17 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using TodoApi.Data;
+using TodoApi.Models;
 
 namespace TodoApi.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/v1/payment")]
     [ApiController]
     public class PaymentController : ControllerBase
     {
-        private readonly DataContext _context;
+        private readonly TnGContext _context;
 
-        public PaymentController(DataContext context)
+        public PaymentController(TnGContext context)
         {
             _context = context;
         }
@@ -19,13 +19,13 @@ namespace TodoApi.Controllers
         [HttpGet]
         public async Task<ActionResult<List<Payment>>> Get()
         {
-            return Ok(await _context.payment.ToListAsync());
+            return Ok(await _context.Payments.ToListAsync());
         }
 
         [HttpGet("{Id}")]
         public async Task<ActionResult<List<Payment>>> Get(int Id)
         {
-            var pm = await _context.payment.FindAsync(Id);
+            var pm = await _context.Payments.FindAsync(Id);
             if (pm == null)
                 return BadRequest("not thing.");
             return Ok(pm);
@@ -34,16 +34,16 @@ namespace TodoApi.Controllers
         [HttpPost]
         public async Task<ActionResult<List<Payment>>> Add(Payment pm)
         {
-            _context.payment.Add(pm);
+            _context.Payments.Add(pm);
             await _context.SaveChangesAsync();
 
-            return Ok(await _context.payment.ToListAsync());
+            return Ok(await _context.Payments.ToListAsync());
         }
 
         [HttpPut]
         public async Task<ActionResult<List<Payment>>> Update(Payment request)
         {
-            var pm = await _context.payment.FindAsync(request.Id);
+            var pm = await _context.Payments.FindAsync(request.Id);
             if (pm == null)
                 return BadRequest("not thing.");
 
@@ -57,20 +57,20 @@ namespace TodoApi.Controllers
             
             await _context.SaveChangesAsync();
 
-            return Ok(await _context.payment.ToListAsync());
+            return Ok(await _context.Payments.ToListAsync());
         }
 
         [HttpDelete("{Id}")]
         public async Task<ActionResult<List<Payment>>> Delete(int Id)
         {
-            var pm = await _context.payment.FindAsync(Id);
+            var pm = await _context.Payments.FindAsync(Id);
             if (pm == null)
                 return BadRequest("not thing.");
 
-            _context.payment.Remove(pm);
+            _context.Payments.Remove(pm);
             await _context.SaveChangesAsync();
 
-            return Ok(await _context.payment.ToListAsync());
+            return Ok(await _context.Payments.ToListAsync());
         }
     }
 }

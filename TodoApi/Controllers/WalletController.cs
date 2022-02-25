@@ -1,17 +1,17 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using TodoApi.Data;
+using TodoApi.Models;
 
 namespace TodoApi.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/v1/wallet")]
     [ApiController]
     public class WalletController : ControllerBase
     {
-        private readonly DataContext _context;
+        private readonly TnGContext _context;
 
-        public WalletController(DataContext context)
+        public WalletController(TnGContext context)
         {
             _context = context;
         }
@@ -19,13 +19,13 @@ namespace TodoApi.Controllers
         [HttpGet]
         public async Task<ActionResult<List<Wallet>>> Get()
         {
-            return Ok(await _context.wallet.ToListAsync());
+            return Ok(await _context.Wallets.ToListAsync());
         }
 
         [HttpGet("{Id}")]
         public async Task<ActionResult<List<Wallet>>> Get(int Id)
         {
-            var wa = await _context.wallet.FindAsync(Id);
+            var wa = await _context.Wallets.FindAsync(Id);
             if (wa == null)
                 return BadRequest("not thing.");
             return Ok(wa);
@@ -34,16 +34,16 @@ namespace TodoApi.Controllers
         [HttpPost]
         public async Task<ActionResult<List<Wallet>>> Add(Wallet wa)
         {
-            _context.wallet.Add(wa);
+            _context.Wallets.Add(wa);
             await _context.SaveChangesAsync();
 
-            return Ok(await _context.wallet.ToListAsync());
+            return Ok(await _context.Wallets.ToListAsync());
         }
 
         [HttpPut]
         public async Task<ActionResult<List<Wallet>>> Update(Wallet request)
         {
-            var wa = await _context.wallet.FindAsync(request.Id);
+            var wa = await _context.Wallets.FindAsync(request.Id);
             if (wa == null)
                 return BadRequest("not thing.");
 
@@ -54,20 +54,20 @@ namespace TodoApi.Controllers
 
             await _context.SaveChangesAsync();
 
-            return Ok(await _context.wallet.ToListAsync());
+            return Ok(await _context.Wallets.ToListAsync());
         }
 
         [HttpDelete("{Id}")]
         public async Task<ActionResult<List<Wallet>>> Delete(int Id)
         {
-            var wa = await _context.wallet.FindAsync(Id);
+            var wa = await _context.Wallets.FindAsync(Id);
             if (wa == null)
                 return BadRequest("not thing.");
 
-            _context.wallet.Remove(wa);
+            _context.Wallets.Remove(wa);
             await _context.SaveChangesAsync();
 
-            return Ok(await _context.wallet.ToListAsync());
+            return Ok(await _context.Wallets.ToListAsync());
         }
     }
 }

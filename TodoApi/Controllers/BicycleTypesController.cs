@@ -1,17 +1,17 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using TodoApi.Data;
+using TodoApi.Models;
 
 namespace TodoApi.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/v1/bicycle-type")]
     [ApiController]
     public class BicycleTypesController : ControllerBase
     {
-        private readonly DataContext _context;
+        private readonly TnGContext _context;
 
-        public BicycleTypesController(DataContext context)
+        public BicycleTypesController(TnGContext context)
         {
             _context = context;
         }
@@ -19,13 +19,13 @@ namespace TodoApi.Controllers
         [HttpGet]
         public async Task<ActionResult<List<BicycleType>>> Get()
         {
-            return Ok(await _context.bicycleType.ToListAsync());
+            return Ok(await _context.BicycleTypes.ToListAsync());
         }
 
         [HttpGet("{Id}")]
         public async Task<ActionResult<List<BicycleType>>> Get(int Id)
         {
-            var xedap = await _context.bicycleType.FindAsync(Id);
+            var xedap = await _context.BicycleTypes.FindAsync(Id);
             if (xedap == null)
                 return BadRequest("not thing.");
             return Ok(xedap);
@@ -34,16 +34,16 @@ namespace TodoApi.Controllers
         [HttpPost]
         public async Task<ActionResult<List<BicycleType>>> Add(BicycleType xedap)
         {
-            _context.bicycleType.Add(xedap);
+            _context.BicycleTypes.Add(xedap);
             await _context.SaveChangesAsync();
 
-            return Ok(await _context.bicycleType.ToListAsync());
+            return Ok(await _context.BicycleTypes.ToListAsync());
         }
 
         [HttpPut]
         public async Task<ActionResult<List<BicycleType>>> Update(BicycleType request)
         {
-            var xedap = await _context.bicycleType.FindAsync(request.Id);
+            var xedap = await _context.BicycleTypes.FindAsync(request.Id);
             if (xedap == null)
                 return BadRequest("not thing.");
 
@@ -55,20 +55,20 @@ namespace TodoApi.Controllers
 
             await _context.SaveChangesAsync();
 
-            return Ok(await _context.bicycleType.ToListAsync());
+            return Ok(await _context.BicycleTypes.ToListAsync());
         }
 
         [HttpDelete("{Id}")]
         public async Task<ActionResult<List<BicycleType>>> Delete(int Id)
         {
-            var xedap = await _context.bicycleType.FindAsync(Id);
+            var xedap = await _context.BicycleTypes.FindAsync(Id);
             if (xedap == null)
                 return BadRequest("not thing.");
 
-            _context.bicycleType.Remove(xedap);
+            _context.BicycleTypes.Remove(xedap);
             await _context.SaveChangesAsync();
 
-            return Ok(await _context.bicycleType.ToListAsync());
+            return Ok(await _context.BicycleTypes.ToListAsync());
         }
     }
 }

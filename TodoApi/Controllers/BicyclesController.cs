@@ -1,74 +1,77 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using TodoApi.Data;
+using TodoApi.Models;
 
 namespace TodoApi.Controllers
-{
-    [Route("api/[controller]")]
+{ 
     [ApiController]
+    [Route("api/v1/bicycle")]
     public class BicyclesController : ControllerBase
     {
-        private readonly DataContext _context;
+        private readonly TnGContext _context;
 
-        public BicyclesController(DataContext context)
+        public BicyclesController(TnGContext context)
         {
             _context = context;
         }
 
         [HttpGet]
-        public async Task<ActionResult<List<Bicycles>>> Get()
+        public async Task<ActionResult<List<Bicycle>>> Get()
         {
-            return Ok(await _context.Bicycle.ToListAsync()); 
+            return Ok(await _context.Bicycles.ToListAsync()); 
         }
 
         [HttpGet("{Id}")]
-        public async Task<ActionResult<List<Bicycles>>> Get(int Id)
+        public async Task<ActionResult<List<Bicycle>>> Get(int Id)
         {
-            var xedap = await _context.Bicycle.FindAsync(Id);
-            if (xedap == null)
+            //IEnumerable<Company> companies = companyRepository.GetCompanies().Skip(page * pagesize).Take(pagesize)
+            //    .Where(s => s.Name.Contains(name, StringComparison.OrdinalIgnoreCase));
+
+            var b = await _context.Bicycles.FindAsync(Id);
+            if (b == null)
                 return BadRequest("not thing.");
-            return Ok(xedap);
+            return Ok(b);
         }
 
         [HttpPost]
-        public async Task<ActionResult<List<Bicycles>>> Add(Bicycles xedap)
+        public async Task<ActionResult<List<Bicycle>>> Add(Bicycle b)
         {
-            _context.Bicycle.Add(xedap);
+            _context.Bicycles.Add(b);
             await _context.SaveChangesAsync();
 
-            return Ok(await _context.Bicycle.ToListAsync());
+            return Ok(await _context.Bicycles.ToListAsync());
         }
 
         [HttpPut]
-        public async Task<ActionResult<List<Bicycles>>> Update(Bicycles request)
+        public async Task<ActionResult<List<Bicycle>>> Update(Bicycle request)
         {
-            var xedap = await _context.Bicycle.FindAsync(request.Id);
-            if (xedap == null)
+            var b = await _context.Bicycles.FindAsync(request.Id);
+            if (b == null)
                 return BadRequest("not thing.");
 
-            xedap.Id = request.Id;
-            xedap.Status = request.Status;
-            xedap.Description = request.Description;
-            xedap.StationId = request.StationId;
-            xedap.LicensePlate = request.LicensePlate;
+            b.Id = request.Id;
+            b.Status = request.Status;
+            b.Description = request.Description;
+            b.StationId = request.StationId;
+            b.LicensePlate = request.LicensePlate;
 
             await _context.SaveChangesAsync();
 
-            return Ok(await _context.Bicycle.ToListAsync());
+            return Ok(await _context.Bicycles.ToListAsync());
         }
 
         [HttpDelete("{Id}")]
-        public async Task<ActionResult<List<Bicycles>>> Delete(int Id)
+        public async Task<ActionResult<List<Bicycle>>> Delete(int Id)
         {
-            var xedap = await _context.Bicycle.FindAsync(Id);
-            if (xedap == null)
+            var b = await _context.Bicycles.FindAsync(Id);
+            if (b == null)
                 return BadRequest("not thing.");
 
-            _context.Bicycle.Remove(xedap);
+            _context.Bicycles.Remove(b);
             await _context.SaveChangesAsync();
 
-            return Ok(await _context.Bicycle.ToListAsync());
+            return Ok(await _context.Bicycles.ToListAsync());
         }
     }
 }
