@@ -1,7 +1,9 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using TodoApi.IRepository;
 using TodoApi.Models;
+using TodoApi.Repository;
 
 namespace TodoApi.Controllers
 { 
@@ -10,6 +12,7 @@ namespace TodoApi.Controllers
     public class BicyclesController : ControllerBase
     {
         private readonly TnGContext _context;
+        private IBicycleRepository bicycleRepository;
 
         public BicyclesController(TnGContext context)
         {
@@ -19,7 +22,7 @@ namespace TodoApi.Controllers
         [HttpGet]
         public async Task<ActionResult<List<Bicycle>>> Get()
         {
-            return Ok(await _context.Bicycles.ToListAsync()); 
+            return Ok(await _context.Bicycles.ToListAsync());
         }
 
         [HttpGet("{Id}")]
