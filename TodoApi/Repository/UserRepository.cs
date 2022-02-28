@@ -1,34 +1,47 @@
-﻿using TodoApi.IRepository;
+﻿using Microsoft.EntityFrameworkCore;
+using TodoApi.IRepository;
 using TodoApi.Models;
 
 namespace TodoApi.Repository
 {
     public class UserRepository : IUserRepository
     {
-        TnGContext tnGContext;
-        public Task<bool> DeleteUser(int id)
+        TnGContext _context;
+        public UserRepository (TnGContext context)
         {
-            throw new NotImplementedException();
+            _context = context;
+        }
+        public async Task<bool> DeleteUser(int id)
+        {
+            var d = await _context.Users.FindAsync(id);
+            _context.Users.Remove(d);
+            return true;
         }
 
-        public Task<User> GetUser(int id)
+        public async Task<User> GetUser(int id)
         {
-            throw new NotImplementedException();
+            var user = await _context.Users.FindAsync(id);
+            return user;
         }
 
-        public Task<IEnumerable<User>> GetUsers()
+        public async Task<IEnumerable<User>> GetUsers()
         {
-            throw new NotImplementedException();
+            var us = await _context.Users.ToListAsync();
+            return us;
         }
 
-        public Task<int> InsertUser(User user)
+        public async Task<int> InsertUser(User user)
         {
-            throw new NotImplementedException();
+            await _context.Users.AddAsync(user);
+            await _context.SaveChangesAsync();
+            return user.Id;
         }
 
-        public Task<bool> UpdateUser(User user)
+        public async Task<bool> UpdateUser(User user)
         {
-            throw new NotImplementedException();
+            _context.Users.Update(user);
+            int rows = await _context.SaveChangesAsync();
+            return rows > 0;
         }
     }
 }
