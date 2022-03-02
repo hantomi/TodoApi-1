@@ -6,10 +6,10 @@ namespace TodoApi.IRepository
 {
     public interface IBicycleRepository
     {
-        Task<IEnumerable<Bicycle>> GetBicycles();
-        Task<Bicycle> GetBicycle(int id);
-        Task<int> InsertBicycle(Bicycle bicycle);
-        Task<bool> UpdateBicycle(Bicycle bicycle);
-        Task<bool> DeleteBicycle(int id);
+        IEnumerable<Bicycle> GetBicycles();
+        Bicycle GetBicycle(int id);
+        int InsertBicycle(Bicycle bicycle);
+        bool UpdateBicycle(Bicycle bicycle);
+        bool DeleteBicycle(int id);
     }
 }

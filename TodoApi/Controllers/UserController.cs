@@ -1,7 +1,9 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using TodoApi.IRepository;
 using TodoApi.Models;
+using TodoApi.Repository;
 
 namespace TodoApi.Controllers
 {
@@ -10,9 +12,10 @@ namespace TodoApi.Controllers
     public class UserController : ControllerBase
     {
         private readonly TnGContext _context;
-
+        private IUserRepository userRepo;
         public UserController(TnGContext context)
         {
+            this.userRepo = new UserRepository(context);
             _context = context;
         }
 

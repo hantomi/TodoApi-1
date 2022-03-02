@@ -1,7 +1,9 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using TodoApi.IRepository;
 using TodoApi.Models;
+using TodoApi.Repository;
 
 namespace TodoApi.Controllers
 {
@@ -10,9 +12,10 @@ namespace TodoApi.Controllers
     public class WalletController : ControllerBase
     {
         private readonly TnGContext _context;
-
+        private IWalletRepository walletRepo;
         public WalletController(TnGContext context)
         {
+            this.walletRepo = new WalletRepository(context);
             _context = context;
         }
 

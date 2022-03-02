@@ -1,7 +1,9 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using TodoApi.IRepository;
 using TodoApi.Models;
+using TodoApi.Repository;
 
 namespace TodoApi.Controllers
 {
@@ -10,64 +12,67 @@ namespace TodoApi.Controllers
     public class StationController : ControllerBase
     {
         private readonly TnGContext _context;
-
+        private IStationRepository stationRepo;
         public StationController(TnGContext context)
         {
+            this.stationRepo = new StationRepository(context);
             _context = context;
         }
 
         [HttpGet]
-        public async Task<ActionResult<List<Station>>> Get()
+        public IEnumerable<Station> Get()
         {
-            return Ok(await _context.Stations.ToListAsync());
+            return stationRepo.GetStations().ToList();
         }
 
-        [HttpGet("{Id}")]
-        public async Task<ActionResult<List<Station>>> Get(int Id)
+        [HttpGet("{id}")]
+        public Station Get(int Id)
         {
-            var sta = await _context.Stations.FindAsync(Id);
-            if (sta == null)
-                return BadRequest("not thing.");
-            return Ok(sta);
+            return stationRepo.GetStation(Id);
         }
 
-        [HttpPost]
-        public async Task<ActionResult<List<Station>>> Add(Station sta)
+        [HttpPost(template:"add")]
+        public String Add(Station sta)
         {
-            _context.Stations.Add(sta);
-            await _context.SaveChangesAsync();
-
-            return Ok(await _context.Stations.ToListAsync());
+            try
+            {
+                stationRepo.InsertStation(sta);
+                return "Add Success";
+            }
+            catch (Exception)
+            {
+                return "Add Failed";
+            }
+            return "Add Failed";
         }
 
-        [HttpPut]
-        public async Task<ActionResult<List<Station>>> Update(Station request)
+        [HttpPut(template:"update")]
+        public String Update(Station request)
         {
-            var sta = await _context.Stations.FindAsync(request.Id);
-            if (sta == null)
-                return BadRequest("not thing.");
-
-            sta.Id = request.Id;
-            sta.Location = request.Location;
-            sta.Capability = request.Capability;
-            sta.Status = request.Status;
-
-            await _context.SaveChangesAsync();
-
-            return Ok(await _context.Stations.ToListAsync());
+            try
+            {
+                stationRepo.UpdateStation(request);
+            }
+            catch (Exception)
+            {
+                return "Update Failed";
+            }
+            return "Update Failed";
         }
 
-        [HttpDelete("{Id}")]
-        public async Task<ActionResult<List<Station>>> Delete(int Id)
+        [HttpDelete(template:"delete/{id}")]
+        public String Delete(int Id)
         {
-            var sta = await _context.Stations.FindAsync(Id);
-            if (sta == null)
-                return BadRequest("not thing.");
-
-            _context.Stations.Remove(sta);
-            await _context.SaveChangesAsync();
-
-            return Ok(await _context.Stations.ToListAsync());
+            try
+            {
+                stationRepo.Delete(Id);
+                return "Delete Success";
+            }
+            catch (Exception)
+            {
+                return "Delete Failed.";
+            }
+            return "Delete Failed";
         }
     }
 }

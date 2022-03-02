@@ -1,7 +1,9 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using TodoApi.IRepository;
 using TodoApi.Models;
+using TodoApi.Repository;
 
 namespace TodoApi.Controllers
 {
@@ -10,9 +12,10 @@ namespace TodoApi.Controllers
     public class DepositsController : ControllerBase
     {
         private readonly TnGContext _context;
-
+        private IDepositRepository depositRepo;
         public DepositsController(TnGContext context)
         {
+            this.depositRepo = new DepositRepository(context);
             _context = context;
         }
 

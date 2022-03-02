@@ -1,7 +1,9 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using TodoApi.IRepository;
 using TodoApi.Models;
+using TodoApi.Repository;
 
 namespace TodoApi.Controllers
 {
@@ -10,9 +12,10 @@ namespace TodoApi.Controllers
     public class TripController : ControllerBase
     {
         private readonly TnGContext _context;
-
+        private ITripRepository tripRepo;
         public TripController(TnGContext context)
         {
+            this.tripRepo = new TripRepository(context);
             _context = context;
         }
 

@@ -1,6 +1,9 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System.Collections.Generic;
+using System.Data;
+using System.Linq;
 using TodoApi.IRepository;
 using TodoApi.Models;
 using TodoApi.Repository;
@@ -12,69 +15,116 @@ namespace TodoApi.Controllers
     public class BicyclesController : ControllerBase
     {
         private readonly TnGContext _context;
-        private IBicycleRepository bicycleRepository;
-
+        private IBicycleRepository bicycleRepo;
+        private IStationRepository stationRepo;
         public BicyclesController(TnGContext context)
         {
+            this.bicycleRepo = new BicycleRepository(context);
+            this.stationRepo = new StationRepository(context);
             _context = context;
         }
 
         [HttpGet]
-        public async Task<ActionResult<List<Bicycle>>> Get()
+        public IEnumerable<Bicycle> Get(int status, int stationID, int page, int pageSize)
         {
-            return Ok(await _context.Bicycles.ToListAsync());
+            if(stationID == null)
+            {
+                IEnumerable<Bicycle> bs = bicycleRepo.GetBicycles().Where(b => b.Status.Equals(status));
+            }
+            return null;
         }
 
-        [HttpGet("{Id}")]
-        public async Task<ActionResult<List<Bicycle>>> Get(int Id)
+        [HttpGet(template:"get/{id}")]
+        public Bicycle Get(int Id)
         {
-            //IEnumerable<Company> companies = companyRepository.GetCompanies().Skip(page * pagesize).Take(pagesize)
-            //    .Where(s => s.Name.Contains(name, StringComparison.OrdinalIgnoreCase));
-
-            var b = await _context.Bicycles.FindAsync(Id);
-            if (b == null)
-                return BadRequest("not thing.");
-            return Ok(b);
+            Bicycle b = bicycleRepo.GetBicycle(Id);
+            return b;
         }
 
-        [HttpPost]
-        public async Task<ActionResult<List<Bicycle>>> Add(Bicycle b)
+        [HttpPost(template:"add")]
+        public String Add(Bicycle b)
         {
-            _context.Bicycles.Add(b);
-            await _context.SaveChangesAsync();
+            bicycleRepo.InsertBicycle(b);
 
-            return Ok(await _context.Bicycles.ToListAsync());
+            return "Add Success";
         }
 
-        [HttpPut]
-        public async Task<ActionResult<List<Bicycle>>> Update(Bicycle request)
+        [HttpPut(template:"update")]
+        public String Update(Bicycle request)
         {
-            var b = await _context.Bicycles.FindAsync(request.Id);
-            if (b == null)
-                return BadRequest("not thing.");
+            try
+            {
+                bicycleRepo.UpdateBicycle(request);
+            }
+            catch (DataException)
+            {
+                return "Update Failed";
+            }
+            return "Update Success";
+        }
 
-            b.Id = request.Id;
-            b.Status = request.Status;
-            b.Description = request.Description;
-            b.StationId = request.StationId;
-            b.LicensePlate = request.LicensePlate;
+        [HttpPut(template: "status-update")]
+        public String UpdateStatus(Bicycle b, int status)
+        {
+            try
+            {
+                b.Status = status;
+                bicycleRepo.UpdateBicycle(b);
+            }
+            catch (DataException)
+            {
+                return "Update Failed";
+            }
+            return "Update Success";
+        }
 
-            await _context.SaveChangesAsync();
+        [HttpPut(template: "description-update")]
+        public String DescStatus(Bicycle b, string desc)
+        {
+            try
+            {
+                b.Description = desc;
+                bicycleRepo.UpdateBicycle(b);
+            }
+            catch (DataException)
+            {
+                return "Update Failed";
+            }
+            return "Update Success";
+        }
 
-            return Ok(await _context.Bicycles.ToListAsync());
+        [HttpPut(template: "station-update")]
+        public String StationStatus(Bicycle b, int stationId)
+        {
+            try
+            {
+                b.StationId = stationId;
+                bicycleRepo.UpdateBicycle(b);
+            }
+            catch (DataException)
+            {
+                return "Update Failed";
+            }
+            return "Update Success";
         }
 
         [HttpDelete("{Id}")]
-        public async Task<ActionResult<List<Bicycle>>> Delete(int Id)
+        public String Delete(int Id)
         {
-            var b = await _context.Bicycles.FindAsync(Id);
-            if (b == null)
-                return BadRequest("not thing.");
-
-            _context.Bicycles.Remove(b);
-            await _context.SaveChangesAsync();
-
-            return Ok(await _context.Bicycles.ToListAsync());
+            Bicycle b = bicycleRepo.GetBicycle(Id);
+            if (b != null)
+            {
+                try
+                {
+                    bicycleRepo.DeleteBicycle(b.Id);
+                    return "Delete Success";
+                }
+                catch (Exception)
+                {
+                    return "Delete Failed";
+                }
+            }
+            return "Delete Failed";
         }
     }
 }

@@ -7,6 +7,8 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using TodoApi.Models;
+using TodoApi.IRepository;
+using TodoApi.Repository;
 
 namespace TodoApi.Controllers
 {
@@ -15,9 +17,10 @@ namespace TodoApi.Controllers
     public class BicycleHistoriesController : ControllerBase
     {
         private readonly TnGContext _context;
-
+        private IBicycleHistoryRepository bHistoryRepo;
         public BicycleHistoriesController(TnGContext context)
         {
+            this.bHistoryRepo = new BicycleHistoryRepository(context);
             _context = context;
         }
 

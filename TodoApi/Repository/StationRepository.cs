@@ -11,38 +11,38 @@ namespace TodoApi.Repository
         {
             _context = context;
         }
-        public async Task<bool> Delete(int id)
+        public bool Delete(int id)
         {
-            var s = await GetStation(id);
+            var s = GetStation(id);
             s.Status = 4;
             _context.Stations.Update(s);
-            int rows = await _context.SaveChangesAsync();
+            int rows = _context.SaveChanges();
             return rows > 0;
         }
 
-        public async Task<Station> GetStation(int id)
+        public Station GetStation(int id)
         {
-            var s = await _context.Stations.FindAsync(id);
+            var s = _context.Stations.Find(id);
             return s;
         }
 
-        public async Task<IEnumerable<Station>> GetStations()
+        public IEnumerable<Station> GetStations()
         {
-            var ss = await _context.Stations.ToListAsync();
+            var ss = _context.Stations.ToList();
             return ss;
         }
 
-        public async Task<int> InsertStation(Station station)
+        public  int InsertStation(Station station)
         {
-            await _context.Stations.AddAsync(station);
-            await _context.SaveChangesAsync();
+            _context.Stations.Add(station);
+            _context.SaveChanges();
             return station.Id;
         }
 
-        public async Task<bool> UpdateStation(Station station)
+        public bool UpdateStation(Station station)
         {
             _context.Stations.Update(station);
-            int rows = await _context.SaveChangesAsync();
+            int rows = _context.SaveChanges();
             return rows > 0;
         }
     }

@@ -6,6 +6,10 @@ namespace TodoApi.Repository
     public class BicycleHistoryRepository : IBicycleHistoryRepository
     {
         private readonly TnGContext _context;
+        public BicycleHistoryRepository (TnGContext context)
+        {
+            _context = context;
+        }
         public Task<bool> DeleteBicycleHistory(int id)
         {
             throw new NotImplementedException();

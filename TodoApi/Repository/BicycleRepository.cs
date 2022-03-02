@@ -15,38 +15,38 @@ namespace TodoApi.Repository
         {
             _context = context;
         }
-        public async Task<Bicycle> GetBicycle(int id)
+        public Bicycle GetBicycle(int id)
         {
-            var b = await _context.Bicycles.FindAsync(id);
-            return b;
+            return _context.Bicycles.Find(id);
+           
        }
 
-        public async Task<IEnumerable<Bicycle>> GetBicycles()
+        public IEnumerable<Bicycle> GetBicycles()
         {
-            var bs = await _context.Bicycles.Include(x => x.BicycleHistories).ToListAsync();
+            var bs =  _context.Bicycles.Include(x => x.BicycleHistories).ToList();
             return bs;
         }
 
-        public async Task<int> InsertBicycle(Bicycle bicycle)
+        public int InsertBicycle(Bicycle bicycle)
         {
-            await _context.Bicycles.AddAsync(bicycle);
-            await _context.SaveChangesAsync();
+             _context.Bicycles.AddAsync(bicycle);
+             _context.SaveChangesAsync();
             return bicycle.Id;
         }
 
-        public async Task<bool> UpdateBicycle(Bicycle bicycle)
+        public bool UpdateBicycle(Bicycle bicycle)
         {
             _context.Bicycles.Update(bicycle);
-            int rows = await _context.SaveChangesAsync();
+            int rows =  _context.SaveChanges();
             return rows > 0;
         }
 
-        async Task<bool> IBicycleRepository.DeleteBicycle(int id)
+        public bool DeleteBicycle(int id)
         {
-            var b = await GetBicycle(id);
+            var b =  GetBicycle(id);
             b.Status = 4;
             _context.Bicycles.Update(b);
-            int rows = await _context.SaveChangesAsync();
+            int rows =  _context.SaveChanges();
             return rows > 0;
         }
     }

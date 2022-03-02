@@ -4,10 +4,10 @@ namespace TodoApi.IRepository
 {
     public interface IStationRepository
     {
-        Task<IEnumerable<Station>> GetStations();
-        Task<Station> GetStation(int id);
-        Task<int> InsertStation(Station station);
-        Task<bool> UpdateStation(Station station);
-        Task<bool> Delete(int id);
+        IEnumerable<Station> GetStations();
+        Station GetStation(int id);
+        int InsertStation(Station station);
+        bool UpdateStation(Station station);
+        bool Delete(int id);
     }
 }
